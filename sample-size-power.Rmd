@@ -87,22 +87,33 @@ knitr::opts_chunk$set(fig.align = 'center',
                       message=FALSE) #stop render when error occurs   
 ```
 
-## R Markdown
+## Problem
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Calculating the sample size appropriately is critical in planning a
+valid microbiome study. Insufficient sample size will cause poor power
+in a hypothesis testing while more-than-enough sample size will cause
+resource wasting or even animal/ human ethics problem.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Power is the probability to correctly reject a null hypothesis when it
+is false, which indicates how credible a microbiome study is.
 
-```{r cars}
-summary(cars)
-```
+Microbiome data has special characteristics different from common data
+set, which thus require special methods to calculate sample size or
+power.
 
-## Including Plots
+## Solution
 
-You can also embed plots, for example:
+IMPACTT experts provided detailed guidelines in 2021-2022, helping
+microbiome researchers calculate sample size and power appropriately.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+## Project outline
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Sample size required is specific to types of hypothesis to test. Four
+types of hypothesis testing are covered in the project as follows,
+
+1.  case study: beta-diversity
+2.  case study: differential abundance analysis of a taxon
+3.  case study: microbial cluster membership
+4.  case study: taxon membership
+
+## R codes
