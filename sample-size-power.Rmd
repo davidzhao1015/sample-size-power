@@ -103,8 +103,9 @@ power.
 
 ## Solution
 
-IMPACTT experts provided detailed guidelines in 2021-2022, helping
-microbiome researchers calculate sample size and power appropriately.
+IMPACTT experts provided detailed guidelines in 2021-2022
+[@ferdous2022][@beta-div2022], helping microbiome researchers calculate
+sample size and power appropriately.
 
 ## Project outline
 
