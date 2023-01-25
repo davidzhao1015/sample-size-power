@@ -118,3 +118,133 @@ types of hypothesis testing are covered in the project as follows,
 4.  case study: taxon membership
 
 ## R codes
+
+In this project, I applied the effective framework to real dataset,
+while practicing R coding skills and familiarizing statistical concepts.
+
+### Case study: sample size or power for comparing within-group and between-group distance matrix (beta-diversity)
+
+```{r beta-distance}
+
+# select appropriate beta-diversity measurement 
+
+
+
+## distribution assumption: normal distribution 
+
+# method 1: Equation A in Table 2 
+
+# method 2: ANOVA F-test R-square (Equation G in Table 2) 
+
+
+
+
+## distribution assumption: nonparametric distribution 
+
+# scenario 1: distance matrix is known 
+
+# scenario 2: distance matrix is unknown - simulate distance matrix  
+
+
+
+
+## distribution assumption: Dirichlet-Multinomial distribution (La Rosa et al.) 
+
+# method: HMP R package  
+
+
+```
+
+### Case study: Alpha-diversity
+
+Alpha diversity refers to the number of species present in an ecosystem
+(richness) as well as the frequency of occurrence of each type of
+organisms (evenness).
+
+Commonly used metrics include:
+
+-   Shannon
+
+-   Inverse Simpson
+
+-   Simpson
+
+-   Chao indices
+
+-   Faith's phylogenetic diversity (Faith's PD)
+
+```{r alpha-diversity}
+
+
+## distribution assumption: normal distribution 
+
+# method 1: Equation A  (explanatory variable is binary) 
+
+# method 2: Equation G for correlation (explanatory variable is continuous)
+
+
+# convert medians and interquartile ranges to means and standard deviations  
+
+```
+
+### Case study: Differential analysis of taxon abundance
+
+Two types of hypothesis tests:
+
+-   Compare mean abundance of a taxon
+
+-   Compare subject proportion with abundance over a chosen threshold
+
+Type I error threshold, alpha should not need adjustment for multiple
+testing, if testing on only single taxon.
+
+Type I error threshold, alpha should be adjusted for multiple testing,
+if a study plans to test association at all taxa.
+
+alpha\^star = alpha / M (where M is the planned number of tests)
+
+```{r taxon abundance}
+
+## distribution assumption: ?
+
+# Equation D and E in Table 2 
+
+
+
+## distribution assumption: non-normal distribution 
+
+# convert median and IQR to mean and standard deviation (suitable for phylum or higher classification levels) 
+
+
+```
+
+
+### Case study: Testing higher or lower rates of cluster membership between groups 
+
+```{r cluster membership}
+
+# Equation C an E in table 2 
+
+
+```
+
+
+### Case study: Testing higher or lower rates of taxon membership between groups (i.e. colonization with a microbe)
+
+To determine sample sizes for colonization with specific microbiota (presence/ absence or yes/ no), one can use the equations for proportions or odds ratios. 
+
+```{r taxa colonization}
+
+# Equation C in table 2 
+
+
+
+```
+
+
+### Case study: Longitudinal study (SIMR: An R package for power analysis of generalized linear mixed models by simulation)  
+
+
+
+
+
