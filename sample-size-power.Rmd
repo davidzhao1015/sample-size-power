@@ -112,10 +112,15 @@ sample size and power appropriately.
 Sample size required is specific to types of hypothesis to test. Four
 types of hypothesis testing are covered in the project as follows,
 
-1.  case study: beta-diversity
-2.  case study: differential abundance analysis of a taxon
-3.  case study: microbial cluster membership
-4.  case study: taxon membership
+1.  Worked example: beta-diversity: IPA study [@chen2021]
+2.  Worked example: alpha-diversity: IPA study [@chen2021]
+3.  Worked example: differential abundance analysis of a taxon: vitamin
+    D study [@zhao2023]
+4.  Worked example: microbial cluster membership: food sensitization
+    [@tun2021]
+5.  Worked example: taxon membership (colonization with a taxon): C.
+    difficile colonization [@drall2020]; B. longum subsp. infantis
+    colonization [@chen2021]
 
 ## R codes
 
@@ -218,8 +223,7 @@ alpha\^star = alpha / M (where M is the planned number of tests)
 
 ```
 
-
-### Case study: Testing higher or lower rates of cluster membership between groups 
+### Case study: Testing higher or lower rates of cluster membership between groups
 
 ```{r cluster membership}
 
@@ -228,10 +232,11 @@ alpha\^star = alpha / M (where M is the planned number of tests)
 
 ```
 
-
 ### Case study: Testing higher or lower rates of taxon membership between groups (i.e. colonization with a microbe)
 
-To determine sample sizes for colonization with specific microbiota (presence/ absence or yes/ no), one can use the equations for proportions or odds ratios. 
+To determine sample sizes for colonization with specific microbiota
+(presence/ absence or yes/ no), one can use the equations for
+proportions or odds ratios.
 
 ```{r taxa colonization}
 
@@ -241,10 +246,4 @@ To determine sample sizes for colonization with specific microbiota (presence/ a
 
 ```
 
-
-### Case study: Longitudinal study (SIMR: An R package for power analysis of generalized linear mixed models by simulation)  
-
-
-
-
-
+### Case study: Longitudinal study (SIMR: An R package for power analysis of generalized linear mixed models by simulation)
