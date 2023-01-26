@@ -2871,7 +2871,7 @@ div.tocify {
 <h1 class="title toc-ignore">Calculate sample size or power for
 published microbiome studies with IMPACTT guidelines</h1>
 <h4 class="author">David Xin Zhao</h4>
-<h4 class="date">Last edited 25 January 2023</h4>
+<h4 class="date">Last edited 26 January 2023</h4>
 
 </div>
 
@@ -2944,10 +2944,15 @@ sample size and power appropriately.</p>
 <p>Sample size required is specific to types of hypothesis to test. Four
 types of hypothesis testing are covered in the project as follows,</p>
 <ol style="list-style-type: decimal">
-<li>case study: beta-diversity</li>
-<li>case study: differential abundance analysis of a taxon</li>
-<li>case study: microbial cluster membership</li>
-<li>case study: taxon membership</li>
+<li>Worked example: beta-diversity: IPA study <span class="citation">(Chen et al. 2021)</span></li>
+<li>Worked example: alpha-diversity: IPA study <span class="citation">(Chen et al. 2021)</span></li>
+<li>Worked example: differential abundance analysis of a taxon: vitamin
+D study <span class="citation">(Zhao et al. 2023)</span></li>
+<li>Worked example: microbial cluster membership: food sensitization
+<span class="citation">(Tun et al. 2021)</span></li>
+<li>Worked example: taxon membership (colonization with a taxon): C.
+difficile colonization <span class="citation">(Drall et al.
+2020)</span>; B. longum subsp. infantis colonization <span class="citation">(Chen et al. 2021)</span></li>
 </ol>
 </div>
 <div id="r-codes" class="section level2" number="0.4">
@@ -2963,11 +2968,93 @@ matrix (beta-diversity)</h3>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># distribution assumption of beta-diversity </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: normal distribution </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: if say normal distribution, look to group means and standard deviations reported in the published papers (Equation A)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: Equation A in Table 2 </span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: ANOVA F-test R-square (Equation G) </span></span></code></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: ANOVA F-test R-square (Equation G in Table 2) </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: nonparametric distribution </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># scenario 1: distance matrix is known </span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># scenario 2: distance matrix is unknown - simulate distance matrix  </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: Dirichlet-Multinomial distribution (La Rosa et al.) </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># method: HMP R package  </span></span></code></pre></div>
+</div>
+<div id="case-study-alpha-diversity" class="section level3" number="0.4.2">
+<h3><span class="header-section-number">0.4.2</span> Case study:
+Alpha-diversity</h3>
+<p>Alpha diversity refers to the number of species present in an
+ecosystem (richness) as well as the frequency of occurrence of each type
+of organisms (evenness).</p>
+<p>Commonly used metrics include:</p>
+<ul>
+<li><p>Shannon</p></li>
+<li><p>Inverse Simpson</p></li>
+<li><p>Simpson</p></li>
+<li><p>Chao indices</p></li>
+<li><p>Faith’s phylogenetic diversity (Faith’s PD)</p></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: normal distribution </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: Equation A  (explanatory variable is binary) </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: Equation G for correlation (explanatory variable is continuous)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># convert medians and interquartile ranges to means and standard deviations  </span></span></code></pre></div>
+</div>
+<div id="case-study-differential-analysis-of-taxon-abundance" class="section level3" number="0.4.3">
+<h3><span class="header-section-number">0.4.3</span> Case study:
+Differential analysis of taxon abundance</h3>
+<p>Two types of hypothesis tests:</p>
+<ul>
+<li><p>Compare mean abundance of a taxon</p></li>
+<li><p>Compare subject proportion with abundance over a chosen
+threshold</p></li>
+</ul>
+<p>Type I error threshold, alpha should not need adjustment for multiple
+testing, if testing on only single taxon.</p>
+<p>Type I error threshold, alpha should be adjusted for multiple
+testing, if a study plans to test association at all taxa.</p>
+<p>alpha^star = alpha / M (where M is the planned number of tests)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: ?</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation D and E in Table 2 </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: non-normal distribution </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># convert median and IQR to mean and standard deviation (suitable for phylum or higher classification levels) </span></span></code></pre></div>
+</div>
+<div id="case-study-testing-higher-or-lower-rates-of-cluster-membership-between-groups" class="section level3" number="0.4.4">
+<h3><span class="header-section-number">0.4.4</span> Case study: Testing
+higher or lower rates of cluster membership between groups</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C an E in table 2 </span></span></code></pre></div>
+</div>
+<div id="case-study-testing-higher-or-lower-rates-of-taxon-membership-between-groups-i.e.-colonization-with-a-microbe" class="section level3" number="0.4.5">
+<h3><span class="header-section-number">0.4.5</span> Case study: Testing
+higher or lower rates of taxon membership between groups
+(i.e. colonization with a microbe)</h3>
+<p>To determine sample sizes for colonization with specific microbiota
+(presence/ absence or yes/ no), one can use the equations for
+proportions or odds ratios.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C in table 2 </span></span></code></pre></div>
+</div>
+<div id="case-study-longitudinal-study-simr-an-r-package-for-power-analysis-of-generalized-linear-mixed-models-by-simulation" class="section level3 unnumbered">
+<h3 class="unnumbered">Case study: Longitudinal study (SIMR: An R
+package for power analysis of generalized linear mixed models by
+simulation)</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-beta-div2022" class="csl-entry">
 <span>“Beta-Diversity Distance Matrices for Microbiome Sample Size and
@@ -2975,12 +3062,41 @@ Power Calculations <span></span> How to Obtain Good Estimates.”</span>
 2022. <em>Computational and Structural Biotechnology Journal</em> 20:
 2259–67. <a href="https://doi.org/10.1016/j.csbj.2022.04.032">https://doi.org/10.1016/j.csbj.2022.04.032</a>.
 </div>
+<div id="ref-chen2021" class="csl-entry">
+Chen, Yuan Yao, Xin Zhao, Wolfgang Moeder, Hein M. Tun, Elinor Simons,
+Piushkumar J. Mandhane, Theo J. Moraes, et al. 2021. <span>“Impact of
+Maternal Intrapartum Antibiotics, and Caesarean Section with and Without
+Labour on Bifidobacterium and Other Infant Gut Microbiota.”</span>
+<em>Microorganisms</em> 9 (9): 1847. <a href="https://doi.org/10.3390/microorganisms9091847">https://doi.org/10.3390/microorganisms9091847</a>.
+</div>
+<div id="ref-drall2020" class="csl-entry">
+Drall, Kelsea M., Catherine J. Field, Andrea M. Haqq, Russell J. de
+Souza, Hein M. Tun, Nadia P. Morales-Lizcano, Theodore B. Konya, et al.
+2020. <span>“Vitamin D Supplementation in Pregnancy and Early Infancy in
+Relation to Gut Microbiota Composition and <span><em>C.
+Difficile</em></span> Colonization: Implications for Viral Respiratory
+Infections.”</span> <em>Gut Microbes</em> 12 (1): 1799734. <a href="https://doi.org/10.1080/19490976.2020.1799734">https://doi.org/10.1080/19490976.2020.1799734</a>.
+</div>
 <div id="ref-ferdous2022" class="csl-entry">
 Ferdous, Tahsin, Lai Jiang, Irina Dinu, Julie Groizeleau, Anita L.
 Kozyrskyj, Celia M. T. Greenwood, and Marie-Claire Arrieta. 2022.
 <span>“The Rise to Power of the Microbiome: Power and Sample Size
 Calculation for Microbiome Studies.”</span> <em>Mucosal Immunology</em>
 15 (6): 1060–70. <a href="https://doi.org/10.1038/s41385-022-00548-1">https://doi.org/10.1038/s41385-022-00548-1</a>.
+</div>
+<div id="ref-tun2021" class="csl-entry">
+Tun, Hein M., Ye Peng, Bolin Chen, Theodore B. Konya, Nadia.P.
+Morales-Lizcano, Radha Chari, Catherine J. Field, et al. 2021.
+<span>“Ethnicity Associations With Food Sensitization Are Mediated by
+Gut Microbiota Development in the First Year of Life.”</span>
+<em>Gastroenterology</em> 161 (1): 94–106. <a href="https://doi.org/10.1053/j.gastro.2021.03.016">https://doi.org/10.1053/j.gastro.2021.03.016</a>.
+</div>
+<div id="ref-zhao2023" class="csl-entry">
+Zhao, Xin, Sarah L. Bridgman, Kelsea M. Drall, Hein M. Tun, Piush J.
+Mandhane, Theo J. Moraes, Elinor Simons, et al. 2023. <span>“Infant
+Vitamin D Supplements, Fecal Microbiota and Their Metabolites at 3
+Months of Age in the CHILD Study Cohort.”</span> <em>Biomolecules</em>
+13 (2): 200. <a href="https://doi.org/10.3390/biom13020200">https://doi.org/10.3390/biom13020200</a>.
 </div>
 </div>
 </div>
