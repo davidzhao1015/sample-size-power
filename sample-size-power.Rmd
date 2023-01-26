@@ -112,22 +112,40 @@ sample size and power appropriately.
 Sample size required is specific to types of hypothesis to test. Four
 types of hypothesis testing are covered in the project as follows,
 
-1.  Worked example: beta-diversity: IPA study [@chen2021]
-2.  Worked example: alpha-diversity: IPA study [@chen2021]
+1.  Worked example: beta-diversity: throat microbiota study[@chen2012]
+2.  Worked example: alpha-diversity: Canadian infants[@azad2013] and
+    IPA[@chen2021]
 3.  Worked example: differential abundance analysis of a taxon: vitamin
-    D study [@zhao2023]
-4.  Worked example: microbial cluster membership: food sensitization
-    [@tun2021]
+    D study[@zhao2023]
+4.  Worked example: microbial cluster membership: food
+    sensitization[@tun2021]
 5.  Worked example: taxon membership (colonization with a taxon): C.
-    difficile colonization [@drall2020]; B. longum subsp. infantis
-    colonization [@chen2021]
+    difficile colonization[@drall2020]; B. longum subsp. infantis
+    colonization[@chen2021]
+6.  Worked example: longitudinal study
 
 ## R codes
 
 In this project, I applied the effective framework to real dataset,
 while practicing R coding skills and familiarizing statistical concepts.
 
-### Case study: sample size or power for comparing within-group and between-group distance matrix (beta-diversity)
+### Worked example: Distance matrix (beta-diversity)
+
+Calculated sample size for the beta-diversity comparison in the
+published study in 2013, Gut microbiota of healthy Canadian infants:
+profiles by mode of delivery and infant diet at 4 months[@azad2013].
+
+The authors reported
+
+```{r extract-means-and-std}
+
+
+
+
+
+
+
+```
 
 ```{r beta-distance}
 
@@ -148,7 +166,7 @@ while practicing R coding skills and familiarizing statistical concepts.
 
 # scenario 1: distance matrix is known 
 
-# scenario 2: distance matrix is unknown - simulate distance matrix  
+# scenario 2: distance matrix is unknown - simulate distance matrix (Kelly et al.)
 
 
 
