@@ -109,20 +109,25 @@ sample size and power appropriately.
 
 ## Project outline
 
-Sample size required is specific to types of hypothesis to test. Four
-types of hypothesis testing are covered in the project as follows,
+Steps to calculate sample size or power in published microbiome studies:
 
-1.  Worked example: beta-diversity: throat microbiota study[@chen2012]
-2.  Worked example: alpha-diversity: Canadian infants[@azad2013] and
-    IPA[@chen2021]
-3.  Worked example: differential abundance analysis of a taxon: vitamin
-    D study[@zhao2023]
-4.  Worked example: microbial cluster membership: food
-    sensitization[@tun2021]
-5.  Worked example: taxon membership (colonization with a taxon): C.
-    difficile colonization[@drall2020]; B. longum subsp. infantis
+1.  Formulate the research question
+2.  Consider the simple hypothesis test corresponding to the question
+3.  Determine the formulation to calculate sample size
+4.  Extract parameters from tables or figures of the original paper
+5.  Implement the formulation with extracted numbers
+
+Application of the IMPACTT guideline to published work:
+
+1.  Beta-diversity: smoker study[@chen2012]; C-section study[@madan2016]
+2.  Alpha-diversity: Canadian infants[@azad2013] and IPA[@chen2021]
+3.  Differential abundance analysis of a taxon: vitamin D
+    study[@zhao2023]
+4.  Microbial cluster membership: food sensitization[@tun2021]
+5.  Taxon membership (colonization with a taxon): C. difficile
+    colonization[@drall2020]; B. longum subsp. infantis
     colonization[@chen2021]
-6.  Worked example: longitudinal study
+6.  Longitudinal study: long-term diet and enterotypes[@wu2011]
 
 ## R codes
 
@@ -131,11 +136,24 @@ while practicing R coding skills and familiarizing statistical concepts.
 
 ### Worked example: Distance matrix (beta-diversity)
 
-Calculated sample size for the beta-diversity comparison in the
-published study in 2013, Gut microbiota of healthy Canadian infants:
-profiles by mode of delivery and infant diet at 4 months[@azad2013].
+Commonly used measures of microbiota beta-diversity include:
 
-The authors reported
+-   Unweighted UniFrac (phylogeny-aware, emphasis on rare taxa)
+
+-   Weighted UniFrac (phylogeny-aware, emphasis on highly abundant taxa)
+
+-   Generalized UniFrac (UniFrac variant, powerful in detecting changes
+    of moderately abundant taxa)
+
+-   Jaccard
+
+-   Bray-Curtis
+
+Calculated sample size for the beta-diversity comparison in the
+published study in 2016,
+
+Formula A is suitable to estimate the required sample size or power, so
+that I extracted mean and standard deviations from the original paper.
 
 ```{r extract-means-and-std}
 
