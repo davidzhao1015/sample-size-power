@@ -111,11 +111,12 @@ sample size and power appropriately.
 
 Steps to calculate sample size or power in published microbiome studies:
 
-1.  Formulate the research question
-2.  Consider the simple hypothesis test corresponding to the question
-3.  Determine the formulation to calculate sample size
-4.  Extract parameters from tables or figures of the original paper
-5.  Implement the formulation with extracted numbers
+1.  Identify the research question/ statistical hypothesis
+2.  Observe dependent variable distribution and grouping variables
+3.  Consider the simple hypothesis test
+4.  Determine the standard formulation
+5.  Extract parameters from paper
+6.  Implement the formulation
 
 Application of the IMPACTT guideline to published work:
 
@@ -150,7 +151,8 @@ Commonly used measures of microbiota beta-diversity include:
 -   Bray-Curtis
 
 Calculated sample size for the beta-diversity comparison in the
-published study in 2016,
+published study in 2016, Effects of Cesarean delivery and formula
+supplementation on the intestinal microbiome of six-week old infants.
 
 Formula A is suitable to estimate the required sample size or power, so
 that I extracted mean and standard deviations from the original paper.
