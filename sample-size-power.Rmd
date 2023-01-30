@@ -87,6 +87,16 @@ knitr::opts_chunk$set(fig.align = 'center',
                       message=FALSE) #stop render when error occurs   
 ```
 
+```{r}
+
+library(tidyverse)
+
+
+
+
+
+```
+
 ## Problem
 
 Calculating the sample size appropriately is critical in planning a
@@ -115,7 +125,7 @@ Steps to calculate sample size or power in published microbiome studies:
 2.  Observe dependent variable distribution and grouping variables
 3.  Consider the simple hypothesis test
 4.  Determine the standard formulation
-5.  Extract parameters from paper
+5.  Extract parameters available from paper
 6.  Implement the formulation
 
 Application of the IMPACTT guideline to published work:
@@ -150,53 +160,88 @@ Commonly used measures of microbiota beta-diversity include:
 
 -   Bray-Curtis
 
+Scenario 1. Mean and standard deviations of distance is available in the
+published paper; assume distance is well-behaved (i.e., normally
+distributed distance for pairs in the same group)
+
 Calculated sample size for the beta-diversity comparison in the
 published study in 2016, Effects of Cesarean delivery and formula
 supplementation on the intestinal microbiome of six-week old infants.
 
-Formula A is suitable to estimate the required sample size or power, so
-that I extracted mean and standard deviations from the original paper.
+Research question: Is the microbiota structure in vaginal-delivery
+infants different that in C-sectional infants?
+
+Statistical hypothesis: distance within group is equal to that between
+group
+
+Mean and standard deviations is available in the published paper. Assume
+UniFrac beta diversity is normal distributed, so that Formula A (in the
+guideline article) is suitable to estimate the required sample size or
+power.
 
 ```{r extract-means-and-std}
 
+extract_unifrac <- data.frame(variable = c("n", "mean", "std"),
+                              vaginal = c(70, 0.5613, 0.0026),
+                              c_section = c(32, 0.5587, 0.0046)) 
 
-
-
-
-
+extract_unifrac  # print the table  
 
 ```
 
 ```{r beta-distance}
 
-# select appropriate beta-diversity measurement 
+# calculate delta based on parameters in the smaller group 
+delta <- (extract_unifrac[2,2] - extract_unifrac[2,3])/extract_unifrac[3,3] 
 
+# assume alpha = 5%, 1-beta = 80%, then required sample size for the C-section group:
+n2 <- ceiling(2*(qnorm(0.025, lower.tail = F) + qnorm(0.2, lower.tail = F))^2/delta^2) 
 
-
-## distribution assumption: normal distribution 
-
-# method 1: Equation A in Table 2 
-
-# method 2: ANOVA F-test R-square (Equation G in Table 2) 
-
-
-
-
-## distribution assumption: nonparametric distribution 
-
-# scenario 1: distance matrix is known 
-
-# scenario 2: distance matrix is unknown - simulate distance matrix (Kelly et al.)
-
-
-
-
-## distribution assumption: Dirichlet-Multinomial distribution (La Rosa et al.) 
-
-# method: HMP R package  
+# the required sample size for the vaginal delivery group: 
+n1 <- ceiling(70/32*n2)  
 
 
 ```
+
+Scenario 2. Pseudo F or R-square is available in the published paper
+(means and standard deviations of distance measures not available), then
+use Equation G (in the guideline article) to calculate required sample
+size based on correlations.
+
+The published paper[@forbes2018], Association of exposure to formula in
+the hospital and subsequent infant feeding practices with gut microbiota
+and risk of overweight in the first year of life, provided pseudo F
+values when comparing UniFrac distance measures.
+
+Pseudo F = 8.11 for unweighted UniFrac, while pseudo F = 8.36 for
+weighted UniFrac (compare No BF vs Partial BF). No BF group has 225
+infants while partial BF group has 367 infants.
+
+```{r Equ-G}
+
+# for unweighted UniFrac distance measure
+
+f <- 8.11/(225 + 367 -2)
+
+r_square <- f^2/(1+f^2)  # effect size 
+
+rho <- sqrt(r_square)  
+
+n <- 3 + (1.96 + 0.84)^2/(log((1+rho)/(1-rho))/2)^2 
+
+n
+
+```
+
+Distribution assumption: nonparametric distribution
+
+Scenario 3: distance matrix is known
+
+Scenario 4: distance matrix is unknown - simulate distance matrix (Kelly
+et al.)
+
+distribution assumption: Dirichlet-Multinomial distribution (La Rosa et
+al.) using HMP R package
 
 ### Case study: Alpha-diversity
 
