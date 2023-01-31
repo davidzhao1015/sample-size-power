@@ -2871,7 +2871,7 @@ div.tocify {
 <h1 class="title toc-ignore">Calculate sample size or power for
 published microbiome studies with IMPACTT guidelines</h1>
 <h4 class="author">David Xin Zhao</h4>
-<h4 class="date">Last edited 26 January 2023</h4>
+<h4 class="date">Last edited 31 January 2023</h4>
 
 </div>
 
@@ -2920,6 +2920,7 @@ p {
 </style>
 </head>
 </html>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <div id="problem" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Problem</h2>
 <p>Calculating the sample size appropriately is critical in planning a
@@ -2941,18 +2942,31 @@ sample size and power appropriately.</p>
 </div>
 <div id="project-outline" class="section level2" number="0.3">
 <h2><span class="header-section-number">0.3</span> Project outline</h2>
-<p>Sample size required is specific to types of hypothesis to test. Four
-types of hypothesis testing are covered in the project as follows,</p>
+<p>Steps to calculate sample size or power in published microbiome
+studies:</p>
 <ol style="list-style-type: decimal">
-<li>Worked example: beta-diversity: IPA study <span class="citation">(Chen et al. 2021)</span></li>
-<li>Worked example: alpha-diversity: IPA study <span class="citation">(Chen et al. 2021)</span></li>
-<li>Worked example: differential abundance analysis of a taxon: vitamin
-D study <span class="citation">(Zhao et al. 2023)</span></li>
-<li>Worked example: microbial cluster membership: food sensitization
-<span class="citation">(Tun et al. 2021)</span></li>
-<li>Worked example: taxon membership (colonization with a taxon): C.
-difficile colonization <span class="citation">(Drall et al.
-2020)</span>; B. longum subsp. infantis colonization <span class="citation">(Chen et al. 2021)</span></li>
+<li>Identify the research question/ statistical hypothesis</li>
+<li>Observe dependent variable distribution and grouping variables</li>
+<li>Consider the simple hypothesis test</li>
+<li>Determine the standard formulation</li>
+<li>Extract parameters available from paper</li>
+<li>Implement the formulation</li>
+</ol>
+<p>Application of the IMPACTT guideline to published work:</p>
+<ol style="list-style-type: decimal">
+<li>Beta-diversity: smoker study<span class="citation">(J. Chen et al.
+2012)</span>; C-section study<span class="citation">(Madan et al.
+2016)</span></li>
+<li>Alpha-diversity: Canadian infants<span class="citation">(Azad et al.
+2013)</span> and IPA<span class="citation">(Y. Y. Chen et al.
+2021)</span></li>
+<li>Differential abundance analysis of a taxon: vitamin D study<span class="citation">(Zhao et al. 2023)</span></li>
+<li>Microbial cluster membership: food sensitization<span class="citation">(Tun et al. 2021)</span></li>
+<li>Taxon membership (colonization with a taxon): C. difficile
+colonization<span class="citation">(Drall et al. 2020)</span>; B. longum
+subsp. infantis colonization<span class="citation">(Y. Y. Chen et al.
+2021)</span></li>
+<li>Longitudinal study: long-term diet and enterotypes<span class="citation">(Wu et al. 2011)</span></li>
 </ol>
 </div>
 <div id="r-codes" class="section level2" number="0.4">
@@ -2960,35 +2974,83 @@ difficile colonization <span class="citation">(Drall et al.
 <p>In this project, I applied the effective framework to real dataset,
 while practicing R coding skills and familiarizing statistical
 concepts.</p>
-<div id="case-study-sample-size-or-power-for-comparing-within-group-and-between-group-distance-matrix-beta-diversity" class="section level3" number="0.4.1">
-<h3><span class="header-section-number">0.4.1</span> Case study: sample
-size or power for comparing within-group and between-group distance
-matrix (beta-diversity)</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select appropriate beta-diversity measurement </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: normal distribution </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: Equation A in Table 2 </span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: ANOVA F-test R-square (Equation G in Table 2) </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: nonparametric distribution </span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># scenario 1: distance matrix is known </span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># scenario 2: distance matrix is unknown - simulate distance matrix  </span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: Dirichlet-Multinomial distribution (La Rosa et al.) </span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># method: HMP R package  </span></span></code></pre></div>
+<div id="worked-example-distance-matrix-beta-diversity" class="section level3" number="0.4.1">
+<h3><span class="header-section-number">0.4.1</span> Worked example:
+Distance matrix (beta-diversity)</h3>
+<p>Commonly used measures of microbiota beta-diversity include:</p>
+<ul>
+<li><p>Unweighted UniFrac (phylogeny-aware, emphasis on rare
+taxa)</p></li>
+<li><p>Weighted UniFrac (phylogeny-aware, emphasis on highly abundant
+taxa)</p></li>
+<li><p>Generalized UniFrac (UniFrac variant, powerful in detecting
+changes of moderately abundant taxa)</p></li>
+<li><p>Jaccard</p></li>
+<li><p>Bray-Curtis</p></li>
+</ul>
+<p>Scenario 1. Mean and standard deviations of distance is available in
+the published paper; assume distance is well-behaved (i.e., normally
+distributed distance for pairs in the same group)</p>
+<p>Calculated sample size for the beta-diversity comparison in the
+published study in 2016, Effects of Cesarean delivery and formula
+supplementation on the intestinal microbiome of six-week old
+infants.</p>
+<p>Research question: Is the microbiota structure in vaginal-delivery
+infants different that in C-sectional infants?</p>
+<p>Statistical hypothesis: distance within group is equal to that
+between group</p>
+<p>Mean and standard deviations is available in the published paper.
+Assume UniFrac beta diversity is normal distributed, so that Formula A
+(in the guideline article) is suitable to estimate the required sample
+size or power.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>extract_unifrac <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&quot;n&quot;</span>, <span class="st">&quot;mean&quot;</span>, <span class="st">&quot;std&quot;</span>),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">vaginal =</span> <span class="fu">c</span>(<span class="dv">70</span>, <span class="fl">0.5613</span>, <span class="fl">0.0026</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">c_section =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="fl">0.5587</span>, <span class="fl">0.0046</span>)) </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>extract_unifrac  <span class="co"># print the table  </span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["vaginal"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["c_section"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"n","2":"70.0000","3":"32.0000"},{"1":"mean","2":"0.5613","3":"0.5587"},{"1":"std","2":"0.0026","3":"0.0046"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate delta based on parameters in the smaller group </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> (extract_unifrac[<span class="dv">2</span>,<span class="dv">2</span>] <span class="sc">-</span> extract_unifrac[<span class="dv">2</span>,<span class="dv">3</span>])<span class="sc">/</span>extract_unifrac[<span class="dv">3</span>,<span class="dv">3</span>] </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># assume alpha = 5%, 1-beta = 80%, then required sample size for the C-section group:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="dv">2</span><span class="sc">*</span>(<span class="fu">qnorm</span>(<span class="fl">0.025</span>, <span class="at">lower.tail =</span> F) <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fl">0.2</span>, <span class="at">lower.tail =</span> F))<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>delta<span class="sc">^</span><span class="dv">2</span>) </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the required sample size for the vaginal delivery group: </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="dv">70</span><span class="sc">/</span><span class="dv">32</span><span class="sc">*</span>n2)  </span></code></pre></div>
+<p>Scenario 2. Pseudo F or R-square is available in the published paper
+(means and standard deviations of distance measures not available), then
+use Equation G (in the guideline article) to calculate required sample
+size based on correlations.</p>
+<p>The published paper<span class="citation">(Forbes et al.
+2018)</span>, Association of exposure to formula in the hospital and
+subsequent infant feeding practices with gut microbiota and risk of
+overweight in the first year of life, provided pseudo F values when
+comparing UniFrac distance measures.</p>
+<p>Pseudo F = 8.11 for unweighted UniFrac, while pseudo F = 8.36 for
+weighted UniFrac (compare No BF vs Partial BF). No BF group has 225
+infants while partial BF group has 367 infants.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for unweighted UniFrac distance measure</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fl">8.11</span><span class="sc">/</span>(<span class="dv">225</span> <span class="sc">+</span> <span class="dv">367</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>r_square <span class="ot">&lt;-</span> f<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>f<span class="sc">^</span><span class="dv">2</span>)  <span class="co"># effect size </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(r_square)  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> (<span class="fl">1.96</span> <span class="sc">+</span> <span class="fl">0.84</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(<span class="fu">log</span>((<span class="dv">1</span><span class="sc">+</span>rho)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>rho))<span class="sc">/</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div>
+<pre><code>## [1] 41498.95</code></pre>
+<p>Distribution assumption: nonparametric distribution</p>
+<p>Scenario 3: distance matrix is known</p>
+<p>Scenario 4: distance matrix is unknown - simulate distance matrix
+(Kelly et al.)</p>
+<p>distribution assumption: Dirichlet-Multinomial distribution (La Rosa
+et al.) using HMP R package</p>
 </div>
 <div id="case-study-alpha-diversity" class="section level3" number="0.4.2">
 <h3><span class="header-section-number">0.4.2</span> Case study:
@@ -3004,14 +3066,93 @@ of organisms (evenness).</p>
 <li><p>Chao indices</p></li>
 <li><p>Faith’s phylogenetic diversity (Faith’s PD)</p></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: normal distribution </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: Equation A  (explanatory variable is binary) </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: Equation G for correlation (explanatory variable is continuous)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># convert medians and interquartile ranges to means and standard deviations  </span></span></code></pre></div>
+<p>The published study, Impact of maternal intrapartum antibiotics, and
+Cesarean section with and without labour on Bifidobacterium and other
+infant gut microbiota, compared alpha diversity in various measures
+among four groups, vaginal_no-IAP, vaginal_IAP, CS_no-labour,
+CS-labour.</p>
+<p>Four measures of alpha-diversity were calculated and shown in the box
+plots, including observed OTUs, Chao1, Shannon, and PD whole tree.
+Extract median and IQR from the box plots using a <a href="https://plotdigitizer.com/app">digital tool</a>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>obsOTU <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">groups =</span> <span class="fu">c</span>(<span class="st">&quot;vaginal_no-IAP&quot;</span>, <span class="st">&quot;vaginal_IAP&quot;</span>, <span class="st">&quot;CS_no-labour&quot;</span>, <span class="st">&quot;CS-labour&quot;</span>),</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">medians =</span> <span class="fu">c</span>(<span class="fl">145.42</span>, <span class="fl">137.72</span>, <span class="fl">133.88</span>, <span class="fl">133.52</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">q1 =</span> <span class="fu">c</span>(<span class="fl">121.98</span>, <span class="fl">115.20</span>, <span class="fl">118.31</span>, <span class="fl">113.18</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">q3 =</span> <span class="fu">c</span>(<span class="fl">170.15</span>, <span class="fl">161.54</span>, <span class="fl">153.29</span>, <span class="fl">155.67</span>))  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>obsOTU<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;obsOTU&quot;</span>, <span class="dv">4</span>) </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>chao1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">groups =</span> <span class="fu">c</span>(<span class="st">&quot;vaginal_no-IAP&quot;</span>, <span class="st">&quot;vaginal_IAP&quot;</span>, <span class="st">&quot;CS_no-labour&quot;</span>, <span class="st">&quot;CS-labour&quot;</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">medians =</span> <span class="fu">c</span>(<span class="fl">197.86</span>, <span class="fl">185.56</span>, <span class="fl">180.21</span>, <span class="fl">183.69</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">q1 =</span> <span class="fu">c</span>(<span class="fl">164.70</span>, <span class="fl">155.34</span>, <span class="fl">148.39</span>, <span class="fl">145.72</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">q3 =</span> <span class="fu">c</span>(<span class="fl">234.75</span>, <span class="fl">223.26</span>, <span class="fl">214.44</span>, <span class="fl">212.03</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>chao1<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;chao1&quot;</span>, <span class="dv">4</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>shannon <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">groups =</span> <span class="fu">c</span>(<span class="st">&quot;vaginal_no-IAP&quot;</span>, <span class="st">&quot;vaginal_IAP&quot;</span>, <span class="st">&quot;CS_no-labour&quot;</span>, <span class="st">&quot;CS-labour&quot;</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">medians =</span> <span class="fu">c</span>(<span class="fl">3.12</span>, <span class="fl">3.06</span>, <span class="fl">3.13</span>, <span class="fl">3.07</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">q1 =</span> <span class="fu">c</span>(<span class="fl">2.66</span>, <span class="fl">2.57</span>, <span class="fl">2.67</span>, <span class="fl">2.60</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">q3 =</span> <span class="fu">c</span>(<span class="fl">3.61</span>, <span class="fl">3.49</span>, <span class="fl">3.51</span>, <span class="fl">3.51</span>)) </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>shannon<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;shannon&quot;</span>, <span class="dv">4</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>pd.tree <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">groups =</span> <span class="fu">c</span>(<span class="st">&quot;vaginal_no-IAP&quot;</span>, <span class="st">&quot;vaginal_IAP&quot;</span>, <span class="st">&quot;CS_no-labour&quot;</span>, <span class="st">&quot;CS-labour&quot;</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">medians =</span> <span class="fu">c</span>(<span class="fl">9.46</span>, <span class="fl">9.20</span>, <span class="fl">9.59</span>, <span class="fl">9.31</span>),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">q1 =</span> <span class="fu">c</span>(<span class="fl">8.40</span>, <span class="fl">8.18</span>, <span class="fl">8.45</span>, <span class="fl">8.20</span>),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">q3 =</span> <span class="fu">c</span>(<span class="fl">10.77</span>, <span class="fl">10.44</span>, <span class="fl">10.77</span>, <span class="fl">10.88</span>)) </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>pd.tree<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;pd&quot;</span>, <span class="dv">4</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># merge four tables </span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>alpha_tab <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(obsOTU, chao1, shannon, pd.tree) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">iqrange =</span> q3 <span class="sc">-</span> q1)  </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>alpha_tab </span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["groups"],"name":[1],"type":["chr"],"align":["left"]},{"label":["medians"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["q1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["q3"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["alpha"],"name":[5],"type":["chr"],"align":["left"]},{"label":["iqrange"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"vaginal_no-IAP","2":"145.42","3":"121.98","4":"170.15","5":"obsOTU","6":"48.17"},{"1":"vaginal_IAP","2":"137.72","3":"115.20","4":"161.54","5":"obsOTU","6":"46.34"},{"1":"CS_no-labour","2":"133.88","3":"118.31","4":"153.29","5":"obsOTU","6":"34.98"},{"1":"CS-labour","2":"133.52","3":"113.18","4":"155.67","5":"obsOTU","6":"42.49"},{"1":"vaginal_no-IAP","2":"197.86","3":"164.70","4":"234.75","5":"chao1","6":"70.05"},{"1":"vaginal_IAP","2":"185.56","3":"155.34","4":"223.26","5":"chao1","6":"67.92"},{"1":"CS_no-labour","2":"180.21","3":"148.39","4":"214.44","5":"chao1","6":"66.05"},{"1":"CS-labour","2":"183.69","3":"145.72","4":"212.03","5":"chao1","6":"66.31"},{"1":"vaginal_no-IAP","2":"3.12","3":"2.66","4":"3.61","5":"shannon","6":"0.95"},{"1":"vaginal_IAP","2":"3.06","3":"2.57","4":"3.49","5":"shannon","6":"0.92"},{"1":"CS_no-labour","2":"3.13","3":"2.67","4":"3.51","5":"shannon","6":"0.84"},{"1":"CS-labour","2":"3.07","3":"2.60","4":"3.51","5":"shannon","6":"0.91"},{"1":"vaginal_no-IAP","2":"9.46","3":"8.40","4":"10.77","5":"pd","6":"2.37"},{"1":"vaginal_IAP","2":"9.20","3":"8.18","4":"10.44","5":"pd","6":"2.26"},{"1":"CS_no-labour","2":"9.59","3":"8.45","4":"10.77","5":"pd","6":"2.32"},{"1":"CS-labour","2":"9.31","3":"8.20","4":"10.88","5":"pd","6":"2.68"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Extract and store summary statistics of four alpha-diversity measures
+from the published paper. In the table, <code>medians</code> refers to
+median of the alpha-diversity measures. And, <code>q1</code> and
+<code>q3</code> mean lower- and upper- quartile, respectively, in the
+box plots. <code>iqrange</code> refers to inter quartile range
+(IQR).</p>
+<p>Take the Faith’s PD-whole-tree alpha-diversity as an example to
+illustrate the procedure to calculate required sample size.</p>
+<p>The null hypothesis is that infant gut microbiota phylogenetic
+diversity did not differ by delivery modes. To test this hypothesis,
+infants delivered vaginally and without using intrapartum antibiotics
+(<code>vaginal_no-IAP</code>) would be compared with those with
+<code>vaginal_IAP</code>, or <code>CS_no-labour</code> or
+<code>CS_labour</code>. In this case, delivery modes is independent
+variable and gut microbiota diversity (Faith’s PD), the dependent
+variable.</p>
+<p>For Faith’s PD in the vaginal_no-IAP group, the median is 9.46, and
+IQR is 2.37. To calculate required sample size based on Equation A,
+convert median and IQR to mean and standard deviation.</p>
+<p>For total sample size &gt;= 25, median is the best estimator of the
+mean. Therefore, mean = 9.36 in this case. The standard deviation =
+IQR/1.35, if samples are large. Therefore, standard deviation =
+2.37/1.35 = 1.76 in this case.</p>
+<p>An effect size of 1.5 units in Faith’s PD metric with a significance
+level of 0.0001 was considered a clinically meaningful effect size,
+according to an analogous study comparing patients with antibiotics to
+healthy subjects.</p>
+<p>Use Equation A in Table 2 and (estimated) standard deviation of 1.76,
+selecting a conventional level of statistical significance of 5% and a
+statistical power of 80%. Therefore, 22 infants per group is needed to
+detect difference in Faith’s PD of &gt;= 2 units.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: normal distribution </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># method 1: Equation A  (explanatory variable is binary) </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># method 2: Equation G for correlation (explanatory variable is continuous)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># convert medians and interquartile ranges to means and standard deviations  </span></span></code></pre></div>
 </div>
 <div id="case-study-differential-analysis-of-taxon-abundance" class="section level3" number="0.4.3">
 <h3><span class="header-section-number">0.4.3</span> Case study:
@@ -3027,20 +3168,20 @@ testing, if testing on only single taxon.</p>
 <p>Type I error threshold, alpha should be adjusted for multiple
 testing, if a study plans to test association at all taxa.</p>
 <p>alpha^star = alpha / M (where M is the planned number of tests)</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: ?</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation D and E in Table 2 </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: non-normal distribution </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># convert median and IQR to mean and standard deviation (suitable for phylum or higher classification levels) </span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: ?</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation D and E in Table 2 </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## distribution assumption: non-normal distribution </span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># convert median and IQR to mean and standard deviation (suitable for phylum or higher classification levels) </span></span></code></pre></div>
 </div>
 <div id="case-study-testing-higher-or-lower-rates-of-cluster-membership-between-groups" class="section level3" number="0.4.4">
 <h3><span class="header-section-number">0.4.4</span> Case study: Testing
 higher or lower rates of cluster membership between groups</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C an E in table 2 </span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C an E in table 2 </span></span></code></pre></div>
 </div>
 <div id="case-study-testing-higher-or-lower-rates-of-taxon-membership-between-groups-i.e.-colonization-with-a-microbe" class="section level3" number="0.4.5">
 <h3><span class="header-section-number">0.4.5</span> Case study: Testing
@@ -3049,18 +3190,33 @@ higher or lower rates of taxon membership between groups
 <p>To determine sample sizes for colonization with specific microbiota
 (presence/ absence or yes/ no), one can use the equations for
 proportions or odds ratios.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C in table 2 </span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation C in table 2 </span></span></code></pre></div>
 </div>
 <div id="case-study-longitudinal-study-simr-an-r-package-for-power-analysis-of-generalized-linear-mixed-models-by-simulation" class="section level3 unnumbered">
 <h3 class="unnumbered">Case study: Longitudinal study (SIMR: An R
 package for power analysis of generalized linear mixed models by
 simulation)</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-azad2013" class="csl-entry">
+Azad, Meghan B., Theodore Konya, Heather Maughan, David S. Guttman,
+Catherine J. Field, Radha S. Chari, Malcolm R. Sears, Allan B. Becker,
+James A. Scott, and Anita L. Kozyrskyj. 2013. <span>“Gut Microbiota of
+Healthy Canadian Infants: Profiles by Mode of Delivery and Infant Diet
+at 4 Months.”</span> <em>Canadian Medical Association Journal</em> 185
+(5): 385–94. <a href="https://doi.org/10.1503/cmaj.121189">https://doi.org/10.1503/cmaj.121189</a>.
+</div>
 <div id="ref-beta-div2022" class="csl-entry">
 <span>“Beta-Diversity Distance Matrices for Microbiome Sample Size and
 Power Calculations <span></span> How to Obtain Good Estimates.”</span>
 2022. <em>Computational and Structural Biotechnology Journal</em> 20:
 2259–67. <a href="https://doi.org/10.1016/j.csbj.2022.04.032">https://doi.org/10.1016/j.csbj.2022.04.032</a>.
+</div>
+<div id="ref-chen2012" class="csl-entry">
+Chen, Jun, Kyle Bittinger, Emily S. Charlson, Christian Hoffmann, James
+Lewis, Gary D. Wu, Ronald G. Collman, Frederic D. Bushman, and Hongzhe
+Li. 2012. <span>“Associating Microbiome Composition with Environmental
+Covariates Using Generalized UniFrac Distances.”</span>
+<em>Bioinformatics</em> 28 (16): 2106–13. <a href="https://doi.org/10.1093/bioinformatics/bts342">https://doi.org/10.1093/bioinformatics/bts342</a>.
 </div>
 <div id="ref-chen2021" class="csl-entry">
 Chen, Yuan Yao, Xin Zhao, Wolfgang Moeder, Hein M. Tun, Elinor Simons,
@@ -3084,12 +3240,34 @@ Kozyrskyj, Celia M. T. Greenwood, and Marie-Claire Arrieta. 2022.
 Calculation for Microbiome Studies.”</span> <em>Mucosal Immunology</em>
 15 (6): 1060–70. <a href="https://doi.org/10.1038/s41385-022-00548-1">https://doi.org/10.1038/s41385-022-00548-1</a>.
 </div>
+<div id="ref-forbes2018" class="csl-entry">
+Forbes, Jessica D., Meghan B. Azad, Lorena Vehling, Hein M. Tun,
+Theodore B. Konya, David S. Guttman, Catherine J. Field, et al. 2018.
+<span>“Association of Exposure to Formula in the Hospital and Subsequent
+Infant Feeding Practices With Gut Microbiota and Risk of Overweight in
+the First Year of Life.”</span> <em>JAMA Pediatrics</em> 172 (7):
+e181161. <a href="https://doi.org/10.1001/jamapediatrics.2018.1161">https://doi.org/10.1001/jamapediatrics.2018.1161</a>.
+</div>
+<div id="ref-madan2016" class="csl-entry">
+Madan, Juliette C., Anne G. Hoen, Sara N. Lundgren, Shohreh F. Farzan,
+Kathryn L. Cottingham, Hilary G. Morrison, Mitchell L. Sogin, Hongzhe
+Li, Jason H. Moore, and Margaret R. Karagas. 2016. <span>“Association of
+Cesarean Delivery and Formula Supplementation With the Intestinal
+Microbiome of 6-Week-Old Infants.”</span> <em>JAMA Pediatrics</em> 170
+(3): 212. <a href="https://doi.org/10.1001/jamapediatrics.2015.3732">https://doi.org/10.1001/jamapediatrics.2015.3732</a>.
+</div>
 <div id="ref-tun2021" class="csl-entry">
 Tun, Hein M., Ye Peng, Bolin Chen, Theodore B. Konya, Nadia.P.
 Morales-Lizcano, Radha Chari, Catherine J. Field, et al. 2021.
 <span>“Ethnicity Associations With Food Sensitization Are Mediated by
 Gut Microbiota Development in the First Year of Life.”</span>
 <em>Gastroenterology</em> 161 (1): 94–106. <a href="https://doi.org/10.1053/j.gastro.2021.03.016">https://doi.org/10.1053/j.gastro.2021.03.016</a>.
+</div>
+<div id="ref-wu2011" class="csl-entry">
+Wu, Gary D., Jun Chen, Christian Hoffmann, Kyle Bittinger, Ying-Yu Chen,
+Sue A. Keilbaugh, Meenakshi Bewtra, et al. 2011. <span>“Linking
+Long-Term Dietary Patterns with Gut Microbial Enterotypes.”</span>
+<em>Science</em> 334 (6052): 105–8. <a href="https://doi.org/10.1126/science.1208344">https://doi.org/10.1126/science.1208344</a>.
 </div>
 <div id="ref-zhao2023" class="csl-entry">
 Zhao, Xin, Sarah L. Bridgman, Kelsea M. Drall, Hein M. Tun, Piush J.

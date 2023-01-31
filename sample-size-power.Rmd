@@ -261,6 +261,92 @@ Commonly used metrics include:
 
 -   Faith's phylogenetic diversity (Faith's PD)
 
+The published study, Impact of maternal intrapartum antibiotics, and
+Cesarean section with and without labour on Bifidobacterium and other
+infant gut microbiota, compared alpha diversity in various measures
+among four groups, vaginal_no-IAP, vaginal_IAP, CS_no-labour, CS-labour.
+
+Four measures of alpha-diversity were calculated and shown in the box
+plots, including observed OTUs, Chao1, Shannon, and PD whole tree.
+Extract median and IQR from the box plots using a [digital
+tool](https://plotdigitizer.com/app).
+
+```{r extract alpha}
+
+obsOTU <- data.frame(groups = c("vaginal_no-IAP", "vaginal_IAP", "CS_no-labour", "CS-labour"),
+                     medians = c(145.42, 137.72, 133.88, 133.52),
+                     q1 = c(121.98, 115.20, 118.31, 113.18),
+                     q3 = c(170.15, 161.54, 153.29, 155.67))  
+
+obsOTU$alpha <- rep("obsOTU", 4) 
+
+chao1 <- data.frame(groups = c("vaginal_no-IAP", "vaginal_IAP", "CS_no-labour", "CS-labour"),
+                    medians = c(197.86, 185.56, 180.21, 183.69),
+                    q1 = c(164.70, 155.34, 148.39, 145.72),
+                    q3 = c(234.75, 223.26, 214.44, 212.03))
+
+chao1$alpha <- rep("chao1", 4)
+
+shannon <- data.frame(groups = c("vaginal_no-IAP", "vaginal_IAP", "CS_no-labour", "CS-labour"),
+                      medians = c(3.12, 3.06, 3.13, 3.07),
+                      q1 = c(2.66, 2.57, 2.67, 2.60),
+                      q3 = c(3.61, 3.49, 3.51, 3.51)) 
+
+shannon$alpha <- rep("shannon", 4)
+
+pd.tree <- data.frame(groups = c("vaginal_no-IAP", "vaginal_IAP", "CS_no-labour", "CS-labour"),
+                      medians = c(9.46, 9.20, 9.59, 9.31),
+                      q1 = c(8.40, 8.18, 8.45, 8.20),
+                      q3 = c(10.77, 10.44, 10.77, 10.88)) 
+
+pd.tree$alpha <- rep("pd", 4)
+
+
+# merge four tables 
+
+alpha_tab <- bind_rows(obsOTU, chao1, shannon, pd.tree) %>% 
+  mutate( iqrange = q3 - q1)  
+
+alpha_tab 
+
+```
+
+Extract and store summary statistics of four alpha-diversity measures
+from the published paper. In the table, `medians` refers to median of
+the alpha-diversity measures. And, `q1` and `q3` mean lower- and upper-
+quartile, respectively, in the box plots. `iqrange` refers to inter
+quartile range (IQR).
+
+Take the Faith's PD-whole-tree alpha-diversity as an example to
+illustrate the procedure to calculate required sample size.
+
+The null hypothesis is that infant gut microbiota phylogenetic diversity
+did not differ by delivery modes. To test this hypothesis, infants
+delivered vaginally and without using intrapartum antibiotics
+(`vaginal_no-IAP`) would be compared with those with `vaginal_IAP`, or
+`CS_no-labour` or `CS_labour`. In this case, delivery modes is
+independent variable and gut microbiota diversity (Faith's PD), the
+dependent variable.
+
+For Faith's PD in the vaginal_no-IAP group, the median is 9.46, and IQR
+is 2.37. To calculate required sample size based on Equation A, convert
+median and IQR to mean and standard deviation.
+
+For total sample size \>= 25, median is the best estimator of the mean.
+Therefore, mean = 9.36 in this case. The standard deviation = IQR/1.35,
+if samples are large. Therefore, standard deviation = 2.37/1.35 = 1.76
+in this case.
+
+An effect size of 1.5 units in Faith's PD metric with a significance
+level of 0.0001 was considered a clinically meaningful effect size,
+according to an analogous study comparing patients with antibiotics to
+healthy subjects.
+
+Use Equation A in Table 2 and (estimated) standard deviation of 1.76,
+selecting a conventional level of statistical significance of 5% and a
+statistical power of 80%. Therefore, 22 infants per group is needed to
+detect difference in Faith's PD of \>= 2 units.
+
 ```{r alpha-diversity}
 
 
