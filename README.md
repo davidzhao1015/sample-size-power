@@ -9,3 +9,5 @@ Two papers that document IMPACTT experts' guideline are as follows,
 2. Beta-diversity distance matrices for microbiome sample size and power calculations - how to obtain good estimates (2021) 
 
 I am interested in applying the framework introduced in the guidelines to evaluate sample-size or power for hypothesis tests in selected published studies, including a piglet trial conducted in my PhD studies. 
+
+Please visit detailed information here, https://davidzhao1015.github.io/sample-size-power/ 
